@@ -2,10 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_1/main.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
 class TodosDetailPage extends StatelessWidget {
   final String kegiatan;
   final String keterangan;
@@ -40,9 +36,6 @@ class TodosDetailPage extends StatelessWidget {
               )
             ],
           ),
-          
-          
-          
         ]),
       ),
     );
