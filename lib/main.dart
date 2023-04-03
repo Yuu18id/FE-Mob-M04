@@ -1,218 +1,184 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/container.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter_application_1/todos_detail.dart';
+import 'package:flutter_application_1/todos_add_page.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+    
   const MyApp({super.key});
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Todos',
       theme: ThemeData(
+        // This is the theme of your application.
+        //
+        // Try running your application with "flutter run". You'll see the
+        // application has a blue toolbar. Then, without quitting the app, try
+        // changing the primarySwatch below to Colors.green and then invoke
+        // "hot reload" (press "r" in the console where you ran "flutter run",
+        // or simply save your changes to "hot reload" in a Flutter IDE).
+        // Notice that the counter didn't reset back to zero; the application
+        // is not restarted.
         primarySwatch: Colors.purple,
       ),
       debugShowCheckedModeBanner: false,
-      home: const Center(child: MyHomePage(title: 'Todos')),
+      home: MyHomePage(
+        listKegiatan: [], 
+        listKeterangan: [], 
+        listTglMulai: [], 
+        listTglSelesai: []
+      ),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-  final String title;
+  const MyHomePage({super.key, 
+      required this.listKegiatan,
+      required this.listKeterangan,
+      required this.listTglMulai,
+      required this.listTglSelesai});
+
+      final List listKegiatan;
+  final List listKeterangan;
+  final List listTglMulai;
+  final List listTglSelesai;
+
+  // This widget is the home page of your application. It is stateful, meaning
+  // that it has a State object (defined below) that contains fields that affect
+  // how it looks.
+
+  // This class is the configuration for the state. It holds the values (in this
+  // case the title) provided by the parent (in this case the App widget) and
+  // used by the build method of the State. Fields in a Widget subclass are
+  // always marked "final".
+
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-  TextEditingController kegiatan = TextEditingController();
-  TextEditingController keterangan = TextEditingController();
-
-  bool? isKegiatanEmpty;
-  bool? isKeteranganEmpty;
+    
+  
 
   @override
   Widget build(BuildContext context) {
-    
-    return Scaffold(
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
+   return Scaffold(
       appBar: AppBar(
-        title: Center(child: const Text('Todos')),
+        title: const Text('Todos'),
+        backgroundColor: Colors.purple,
       ),
-      body: Center(
-        child: SizedBox(
-          width: 440,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
-                child: Row(
+      body: ListView.builder(
+          itemCount: listKegiatan.length,
+          itemBuilder: (BuildContext context, int index) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 20.0, right: 15.0, left: 10.0),
+                child: Column(
                   children: [
-                    const Icon(Icons.list_alt),
-                    const Padding(padding: EdgeInsets.only(right: 7)),
-                    const Text(
-                      'Kegiatan',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    const Padding(padding: EdgeInsets.only(right: 80)),
-                    SizedBox(
-                      width: 230,
-                      child: TextFormField(
-                        controller: kegiatan,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10)),
-                            labelText: 'Judul Kegiatan',
-                            errorText: isKegiatanEmpty == true ? 'Judul Kegiatan Harus Diisi' : null
+                    Container(
+                        child: Row(
+                      children: [
+                        Expanded(
+                            flex: 2,
+                          child: Container(
+                            width: 50,
+                            height: 50,
+                            child: Stack(
+                              children : [ Center(
+                                child: Icon(
+                                  Icons.circle,
+                                  size: 50,
+                                  color: Colors.purple[700],
+                                ),
+                              ),Center(
+                                child: Text(
+                                        '${index+1}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                              ),
+
+                              ]
                             ),
-                            
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-                child: Row(
-                  children: const [
-                    Icon(Icons.sort),
-                    Padding(padding: EdgeInsets.only(right: 7)),
-                    Text(
-                      'Keterangan',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 50.0, top: 10),
-                width: 415,
-                child: TextFormField(
-                  controller: keterangan,
-                  decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.only(
-                          top: 40, bottom: 40, left: 15, right: 40),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10)),
-                      labelText: 'Tambah Keterangan',
-                      errorText: isKeteranganEmpty == true ? 'Keterangan Harus Diisi' : null),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 20, top: 20),
-                child: Row(
-                  children: const [
-                    Icon(Icons.calendar_month),
-                    Padding(padding: EdgeInsets.only(right: 7)),
-                    Text(
-                      'Tanggal Mulai',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Padding(padding: EdgeInsets.only(left: 85)),
-                    Icon(Icons.calendar_month_outlined),
-                    Padding(padding: EdgeInsets.only(right: 7)),
-                    Text(
-                      'Tanggal Selesai',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(left: 50, top: 10),
-                child: Row(
-                  children: [
-                    SizedBox(
-                      width: 120,
-                      child: TextFormField(
-                        
-                        decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            labelText: '20-03-2022',
-                            labelStyle: TextStyle(fontSize: 14)),
-                      ),
-                    ),
-                    const Padding(padding: EdgeInsets.only(left: 90)),
-                    SizedBox(
-                      width: 120,
-                      child: TextFormField(
-
-                        decoration: const InputDecoration(
-                            border: UnderlineInputBorder(),
-                            labelText: '20-03-2022',
-                            labelStyle: TextStyle(fontSize: 14)),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.only(top: 20, left: 25),
-                child: Row(
-                  children: [
-                    SizedBox(
-                        width: 190,
-                        child: OutlinedButton(
-                          style: OutlinedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 18)),
-                          onPressed: () {},
-                          child: const Text('Batal',
-                              style: TextStyle(fontWeight: FontWeight.bold)),
-                        )),
-                    const Padding(padding: EdgeInsets.all(5)),
-                    SizedBox(
-                        width: 190,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 18)),
-                          onPressed: () {
-                            if (kegiatan.text.isEmpty) {
-                              setState(() {
-                                isKegiatanEmpty = true;
-                              });
-                            }
-
-                            if (keterangan.text.isEmpty) {
-                              setState(() {
-                                isKeteranganEmpty = true;
-                              });
-                            }
-
-                            else {
-                              setState(() {
-                                isKegiatanEmpty = false;
-                                isKeteranganEmpty = false;
-                              });
-
-                              Navigator.push(context, MaterialPageRoute (builder: (context) {
-                                return TodosDetailPage(kegiatan: kegiatan.text, keterangan: keterangan.text, tglMulai: DateTime.now().toString(), tglSelesai: DateTime.now().toString(),);
-                              })) ;
-
-                              
-                            }
-                          },
-                          child: const Text(
-                            'Simpan',
-                            style: TextStyle(fontWeight: FontWeight.bold),
                           ),
-                        )),
+                        ),
+                        Expanded(
+                          flex: 6,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                listKegiatan[index],
+                                style: const TextStyle(
+                                  fontSize: 19,
+                                ),
+                              ),
+                              Text(
+                                listKeterangan[index],
+                                style:
+                                    const TextStyle(fontSize: 16, color: Colors.grey),
+                              )
+                            ],
+                          ),
+                        ),
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                                Container(
+                                    padding: const EdgeInsets.all(5.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10.0),
+                                        color: Colors.blue,
+                                    ),
+                                    
+                                    child: const Text('Work', style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.white,
+                                        
+                                    ),),
+                                ),
+                              Text(
+                                listTglMulai[index],
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                              Text(
+                                listTglSelesai[index],
+                                style: const TextStyle(
+                                  fontSize: 12,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      ],
+                    ))
                   ],
                 ),
-              ),
-            ],
-          ),
-        ),
+              
+            );
+          }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => TodosAddPage()));
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
